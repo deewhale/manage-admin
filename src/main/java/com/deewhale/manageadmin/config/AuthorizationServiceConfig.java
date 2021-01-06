@@ -2,19 +2,23 @@ package com.deewhale.manageadmin.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 /********************************************
  * @author     ：pepper
  * @date       ：Created in 2021/1/4 下午4:30
  * @description：创建授权服务
  * ******************************************/
-@Configurable
+@Configuration
 @EnableAuthorizationServer
 public class AuthorizationServiceConfig extends AuthorizationServerConfigurerAdapter {
 
@@ -34,7 +38,20 @@ public class AuthorizationServiceConfig extends AuthorizationServerConfigurerAda
                 .accessTokenValiditySeconds(1800) //过期时间
                 .refreshTokenValiditySeconds(60 * 60 * 2)
                 .resourceIds("rid")
-                .scopes("all"); //允许的授权范围
-//                .secret("234567890");
+                .scopes("all") //允许的授权范围
+                .secret("123456");
+    }
+
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.allowFormAuthenticationForClients();//允许客户端表单身份验证
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints.tokenStore(new RedisTokenStore(redisConnectionFactory))
+                //身份验证管理
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
     }
 }

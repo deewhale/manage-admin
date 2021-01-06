@@ -2,7 +2,6 @@ server:
   port: 8022
 spring:
   redis:
-    host: 49.232.189.67
+    host: 127.0.0.1
     port: 6379
     database: 0
-    password: pepper
