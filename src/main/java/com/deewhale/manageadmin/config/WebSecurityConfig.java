@@ -39,15 +39,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/oauth/**")
                 .authorizeRequests()
-                .antMatchers("/oauth").permitAll()
+                .antMatchers("/oauth/**").permitAll()
                 .and().csrf().disable();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("admin").password("123456").roles("admin")
+                .withUser("admin").password(new BCryptPasswordEncoder().encode("123456")).roles("admin")
                 .and()
-                .withUser("user").password("123456").roles("user");
+                .withUser("user").password(new BCryptPasswordEncoder().encode("123")).roles("user");
     }
 }
