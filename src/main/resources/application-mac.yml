@@ -8,8 +8,8 @@ spring:
       name: root
       password: 12345678
   datasource:
-      username: root
-      password: m1234567
-      url: jdbc:mysql://49.232.189.67:3306/manage
-      driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: m1234567
+    url: jdbc:mysql://49.232.189.67:3306/manage
+    driver-class-name: com.mysql.jdbc.Driver
 

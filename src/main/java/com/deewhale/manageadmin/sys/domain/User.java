@@ -21,11 +21,25 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
-    private int id;
+    private Integer id;
 
     @TableField(value = "user_name")
     private String userName;
 
 
     private String password;
+
+    @TableField(exist = false)
+    private boolean accountNonExpired = true;
+
+    @TableField(exist = false)
+    private boolean accountNonLocked= true;
+
+    @TableField(exist = false)
+    private boolean credentialsNonExpired= true;
+
+    @TableField(exist = false)
+    private boolean enabled= true;
+
+
 }

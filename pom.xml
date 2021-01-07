@@ -82,10 +82,13 @@
 		</dependency>
 	</dependencies>
 
-	<repository>
-		<id>snapshots</id>
-		<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-	</repository>
+
+	<repositories>
+		<repository>
+			<id>snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
