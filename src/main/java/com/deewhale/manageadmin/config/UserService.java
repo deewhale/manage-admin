@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
 
         System.out.println(user.getPassword());
 
-        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnabled(),
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), passwordEncoder.encode(user.getPassword()), user.isEnabled(),
                 user.isAccountNonExpired(), user.isCredentialsNonExpired(),
                 user.isAccountNonLocked(), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
     }

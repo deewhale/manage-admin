@@ -3,10 +3,6 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 0
-  security:
-    user:
-      name: root
-      password: 12345678
   datasource:
     username: root
     password: m1234567
