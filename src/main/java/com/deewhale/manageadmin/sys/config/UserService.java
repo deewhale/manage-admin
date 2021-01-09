@@ -1,4 +1,4 @@
-package com.deewhale.manageadmin.config;
+package com.deewhale.manageadmin.sys.config;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.deewhale.manageadmin.sys.domain.User;

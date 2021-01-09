@@ -3,6 +3,8 @@ package com.deewhale.manageadmin.sys.controller;
 import com.deewhale.manageadmin.sys.domain.User;
 import com.deewhale.manageadmin.sys.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +31,10 @@ public class HelloController {
     public String getUser(){
         List<User> users = mapper.selectList(null);
         return users.get(0).toString();
+    }
+
+    @GetMapping("index")
+    public Object index(Authentication authentication){
+        return  authentication;
     }
 }
