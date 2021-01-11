@@ -1,5 +1,6 @@
 package com.deewhale.manageadmin.sys.config;
 
+import com.deewhale.manageadmin.sys.filter.ValidateCodeFilter;
 import com.deewhale.manageadmin.sys.handle.SysAuthenticationFailureHandler;
 import com.deewhale.manageadmin.sys.handle.SysAuthenticationSucessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /********************************************
  * @author     ：pepper
@@ -25,9 +27,13 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SysAuthenticationFailureHandler failureHandler;
 
+    @Autowired
+    private ValidateCodeFilter validateCodeFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin() // 表单登录
+        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin() // 表单登录
                 // http.httpBasic() // HTTP Basic
                 .loginPage("/authentication/require") // 跳转 URL
                 .loginProcessingUrl("/login") // 处理表单登录 URL

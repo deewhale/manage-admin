@@ -1,5 +1,7 @@
 package com.deewhale.manageadmin.sys.filter;
 
+import com.deewhale.manageadmin.sys.controller.ValidateCodeController;
+import com.deewhale.manageadmin.sys.domain.ImageCode;
 import com.deewhale.manageadmin.sys.exception.ValidateCodeException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,7 +40,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         if (StringUtils.equalsIgnoreCase("/login", request.getRequestURI())
                 && StringUtils.equalsIgnoreCase(request.getMethod(), "post")) {  //必须是 post 的 login 请求
             try {
-                validateCode(new ServletWebRequest(request));
+                validateCode(new ServletWebRequest(request));//验证码校验
             } catch (ValidateCodeException e) {
                 authenticationFailureHandler.onAuthenticationFailure(request, response, e);
                 return;
@@ -47,6 +50,24 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     }
 
     private void validateCode(ServletWebRequest servletWebRequest) throws ServletRequestBindingException {
+        ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(servletWebRequest, ValidateCodeController.SESSION_KEY_IMAGE_CODE);
+        String codeInRequest = ServletRequestUtils.getStringParameter(servletWebRequest.getRequest(), "imageCode");
+
+        if (StringUtils.isBlank(codeInRequest)) {
+            throw new ValidateCodeException("验证码不能为空！");
+        }
+        if (codeInSession == null) {
+            throw new ValidateCodeException("验证码不存在！");
+        }
+        if (codeInSession.isExpire()) {
+            sessionStrategy.removeAttribute(servletWebRequest, ValidateCodeController.SESSION_KEY_IMAGE_CODE);
+            throw new ValidateCodeException("验证码已过期！");
+        }
+        if (!StringUtils.equalsIgnoreCase(codeInSession.getCode(), codeInRequest)) {
+            throw new ValidateCodeException("验证码不正确！");
+        }
+        sessionStrategy.removeAttribute(servletWebRequest, ValidateCodeController.SESSION_KEY_IMAGE_CODE);
+
 
     }
 }
