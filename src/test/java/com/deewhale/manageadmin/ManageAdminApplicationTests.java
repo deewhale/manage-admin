@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -29,5 +30,13 @@ class ManageAdminApplicationTests {
 		List<User> userList = userMapper.selectList(null);
 		Assert.assertEquals(1, userList.size());
 		userList.forEach(System.out::println);
+	}
+
+	@Test
+	public void localDate(){
+		LocalDateTime time = LocalDateTime.now();
+
+		System.out.println(time);
+
 	}
 }
